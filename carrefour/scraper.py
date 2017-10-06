@@ -1,4 +1,5 @@
 import requests
+import urllib.request
 from dicttoxml import dicttoxml
 from bs4 import BeautifulSoup
 import xml.etree.cElementTree as ET
@@ -94,6 +95,7 @@ while (count < 380):
                 product_count+=1
                 print(product_count)
         except Exception as e:
+            print(e)
             pass
 
     count += url_increment
