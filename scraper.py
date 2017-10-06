@@ -29,8 +29,8 @@ def login():
                 browser = mechanize.Browser()
                 browser.open(login_url)
                 browser.select_form(name="loginBox")
-                browser["userLogin"] = "squiz.shama@gmail.com"
-                browser["password"] = "rodrigo1997"
+                browser["userLogin"] = "joao.garca23@gmail.com"
+                browser["password"] = "JO@TREZ3"
                 browser.submit()
                 return browser
         except Exception as e:
@@ -53,7 +53,11 @@ def write_xml(row):
 	tree = ET.ElementTree(xml_root)
 	tree.write(xml_path)
 
-def download_image(url, image_name):
+def download_image(url):
+    parse = url.split('uploads/', 1)
+    parse = parse[1].split('/', 1)
+    parse = parse[1].split('/', 1)
+    image_name = parse[1]
     caminho = os.getcwd() + "/images/" + image_name
     image = urllib.urlretrieve(url, caminho)
 
@@ -91,7 +95,7 @@ for category, url in category_urls.items():
     print 'Scraping category: ' + category
     while(not done):
         products_urls = []
-        soup = BeautifulSoup(browser.open(page_url))
+        soup = BeautifulSoup(browser.open(page_url), 'lxml')
         lines = soup.findAll('a', class_='showcase-item__thumb')
         for line in lines:
             extract_product_link(str(line))
@@ -118,7 +122,7 @@ for category, url in category_urls.items():
 
                 find_result = soup.find('img', {'class':'product-image__main-img'})
                 image_link = extract_image_link(str(find_result))
-                print image_link
+                download_image(image_link)
 
                 print 'writing xml'
                 row = [product_name, category, image_link, product_price]
