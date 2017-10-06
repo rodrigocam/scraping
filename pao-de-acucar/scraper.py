@@ -1,9 +1,4 @@
-# usar o link https://api.gpa.digital/pa/products/list/secoes/C4233/limpeza?storeId=501&qt=36&s=&ftr=null&p=3&rm=&gt=list
-
-#limpeza?storeId=501&qt=36&s=&ftr=null&p=&rm=&gt=list
-#adicionar numero da página antes do &rm
-
-#fazer join &rm=&gt=list
+#!/usr/bin/env python
 
 import requests
 import urllib.request
@@ -119,7 +114,7 @@ for category in category_urls:
                     download_image(image_link)
                 except Exception as e:
                     pass
-                    
+
                 print(product_name)
                 row = [image_link, product_name, product_price]
                 write_xml(row)
