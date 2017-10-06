@@ -6,14 +6,17 @@
 #fazer join &rm=&gt=list
 
 import requests
+import urllib.request
 from dicttoxml import dicttoxml
 from bs4 import BeautifulSoup
 import xml.etree.cElementTree as ET
 import time
 import os
+import random
 
 
-xml_path = 'paodeacucar.xml'
+xml_path = 'paodeacucar' + '_' + time.strftime("%d-%m-%Y") + '.xml'
+
 
 def get_content(url):
     req = requests.get(url)
@@ -24,6 +27,17 @@ def get_content(url):
     else:
         raise ConnectionError
 
+
+def download_image(url):
+    parse = url.split('uploads/', 1)
+    parse = parse[1].split('/', 1)
+    parse = parse[1].split('/', 1)
+    image_name = parse[1]
+    caminho = os.getcwd() + "/images/" + image_name
+
+    image = urllib.request.urlretrieve(url, caminho)
+
+
 def extract_product_name(string):
     parse1 = string.split('/produto/', 1)
     parse2 = parse1[1].split('/', 1)
@@ -32,6 +46,7 @@ def extract_product_name(string):
     result = parse3[0].replace('-', ' ')
     return result.upper()
 
+
 def extract_product_price(string):
     parse1 = string.split('>', 1)
     parse2 = parse1[1].split('<', 1)
@@ -39,12 +54,14 @@ def extract_product_price(string):
     result = parse2[0]
     return result
 
+
 def extract_product_image_link(string):
     parse1 = string.split('big>', 1)
     parse2 = parse1[1].split('<', 1)
 
     result = 'https://www.paodeacucar.com' + parse2[0]
     return result
+
 
 def write_xml(row):
     if os.path.exists(xml_path):
@@ -72,13 +89,17 @@ products = []
 
 for category in category_urls:
     page_count = 0
+    category_done = False
 
     while not category_done:
+        delay = random.randrange(7)
+
         if(page_count > 0):
             url = category + str(page_count) + '&rm=&gt=list'
         else:
             url = category + '&rm=&gt=list'
 
+        time.sleep(delay)
         page = get_content(url)
         soup = BeautifulSoup(page, 'lxml')
 
@@ -94,12 +115,17 @@ for category in category_urls:
                 product_name = extract_product_name(str(name))
                 product_price = extract_product_price(str(price))
                 image_link = extract_product_image_link(str(image_l))
-
+                try:
+                    download_image(image_link)
+                except Exception as e:
+                    pass
+                    
                 print(product_name)
                 row = [image_link, product_name, product_price]
                 write_xml(row)
             page_count += 1
         else:
+            time.sleep(15)
             category_done = True
 
 category_urls.close()
