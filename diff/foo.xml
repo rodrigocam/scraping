@@ -1,0 +1,8 @@
+<produtos>
+    <produto>
+        <nome> LIXO </nome>
+        <preco> 15,00 </preco></produto>
+    <produto>
+        <nome> AGUA </nome>
+        <preco> 5,00 </preco></produto>
+</produtos>
