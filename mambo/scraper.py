@@ -153,7 +153,7 @@ def get_category_department(raw_data):
     print(department)
     if '&amp;' in department:
         tmp = department.partition('&amp;')
-        department = tmp[0] + '&' + tmp[2].split(' ')[0]
+        department = tmp[0] + '& ' + tmp[2].split(' ')[1]
 
     return (CATEGORY_DICT[category], DEPARTMENT_DICT[department])
 
