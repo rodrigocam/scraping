@@ -171,6 +171,7 @@ def get_brand_url(raw_data):
 
 def scrape():
     urls = open('category_urls', 'r')
+    delay = random.randrange(5)
 
     for url in urls:
         url = url.split('\n')[0]
@@ -191,27 +192,30 @@ def scrape():
             category, department = get_category_department(str(soup.findAll('title')[0]))
             div_list = soup.findAll('div', {'data-isinstock': True})
 
-            delay = random.randrange(7)
-
             for raw_url in div_list:
-                time.sleep(delay)
                 product_url = get_product_url(str(raw_url))
 
                 print(product_url)
-                page = get_content(product_url)
-                soup = BeautifulSoup(page, 'lxml')
-                try:
-                    price = get_attrib(str(soup.findAll('meta', {'property':'product:price:amount'})[0]))
-                    product_name = get_attrib(str(soup.findAll('meta', {'name':'description'})[0]))
-                    gtin_code = get_attrib(str(soup.findAll('meta', {'itemprop':'gtin13'})[0]))
-                    image_link = get_attrib(str(soup.findAll('meta', {'property':'og:image'})[0]))
-                    row = [product_name, gtin_code, price, str(category), str(department), image_link]
+                while True:
+                    try:
+                        page = get_content(product_url)
+                        soup = BeautifulSoup(page, 'lxml')
 
-                    download_image(image_link, gtin_code + '.jpg')
-                    write_xml(row)
+                        price = get_attrib(str(soup.findAll('meta', {'property':'product:price:amount'})[0]))
+                        product_name = get_attrib(str(soup.findAll('meta', {'name':'description'})[0]))
+                        gtin_code = get_attrib(str(soup.findAll('meta', {'itemprop':'gtin13'})[0]))
+                        image_link = get_attrib(str(soup.findAll('meta', {'property':'og:image'})[0]))
+                        row = [product_name, gtin_code, price, str(category), str(department), image_link]
 
-                except IndexError:
-                    print('Prduto indisponível - ' + product_url)
+                        download_image(image_link, gtin_code + '.jpg')
+                        write_xml(row)
+                        break
+                    except ConnectionError:
+                        time.sleep(delay)
+                        continue
+                    except IndexError:
+                        print('Prduto indisponível - ' + product_url)
+                        break
 
 
 if __name__ == '__main__':
