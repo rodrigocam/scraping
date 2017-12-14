@@ -25,7 +25,7 @@ DEPARTMENT_DICT = {'Alimentos Básicos': 2,
                    'Doces & Sobremesas': 3,
                    'Biscoitos & Salgadinhos': 4,
                    'Bomboniere': 5,
-                   'Massas & Molhos 3 minutos': 6,
+                   'Massas & Molhos': 6,
                    'Temperos & Condimentos': 7,
                    'Conservas & Enlatados': 8,
                    'Grãos & Farináceos': 9,
@@ -153,7 +153,7 @@ def get_category_department(raw_data):
     print(department)
     if '&amp;' in department:
         tmp = department.partition('&amp;')
-        department = tmp[0] + '&' + tmp[2]
+        department = tmp[0] + '&' + tmp[2].split(' ')[0]
 
     return (CATEGORY_DICT[category], DEPARTMENT_DICT[department])
 
