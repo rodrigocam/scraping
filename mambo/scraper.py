@@ -153,7 +153,6 @@ def get_category_department(raw_data):
     if '&amp;' in department:
         tmp = department.partition('&amp;')
         department = tmp[0] + '&' + tmp[2]
-        print(department)
 
     return (CATEGORY_DICT[category], DEPARTMENT_DICT[department])
 
@@ -171,7 +170,7 @@ def get_brand_url(raw_data):
 
 def scrape():
     urls = open('category_urls', 'r')
-    delay = 10
+    delay = 15
 
     for url in urls:
         while True:
@@ -211,6 +210,7 @@ def scrape():
                         write_xml(row)
                 break
             except ConnectionError:
+                print('\n---- CONNECTION ERROR ----\n')
                 time.sleep(delay)
                 continue
             except IndexError:
