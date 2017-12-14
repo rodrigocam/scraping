@@ -113,8 +113,8 @@ def get_content(url):
 
 def download_image(url, image_name):
     caminho = os.getcwd() + "/images/" + image_name
-
-    image = urllib.request.urlretrieve(url, caminho)
+    if not os.path.isfile(caminho):
+        image = urllib.request.urlretrieve(url, caminho)
 
 
 def write_xml(row):
