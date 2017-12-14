@@ -171,7 +171,7 @@ def get_brand_url(raw_data):
 
 def scrape():
     urls = open('category_urls', 'r')
-    delay = random.randrange(5)
+    delay = 10
 
     for url in urls:
         url = url.split('\n')[0]
