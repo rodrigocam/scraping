@@ -171,7 +171,7 @@ def get_brand_url(raw_data):
 
 def scrape():
     urls = open('category_urls', 'r')
-    delay = 30
+    delay = 120
 
     for url in urls:
         while True:
