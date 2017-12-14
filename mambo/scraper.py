@@ -3,6 +3,8 @@ import xml.etree.cElementTree as ET
 from bs4 import BeautifulSoup
 import requests
 import os
+import random
+import time
 
 
 CATEGORY_DICT = {'Mercearia': 2,
@@ -189,7 +191,10 @@ def scrape():
             category, department = get_category_department(str(soup.findAll('title')[0]))
             div_list = soup.findAll('div', {'data-isinstock': True})
 
+            delay = random.randrange(7)
+
             for raw_url in div_list:
+                time.sleep(delay)
                 product_url = get_product_url(str(raw_url))
 
                 print(product_url)
