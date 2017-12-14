@@ -174,30 +174,30 @@ def scrape():
     delay = 10
 
     for url in urls:
-        url = url.split('\n')[0]
-        print(url)
-        page = get_content(url)
-        soup = BeautifulSoup(page, 'lxml')
-        
-        tmp = str(soup.findAll('ul', {'class': 'Marca'})[0])
-        tmp_soup = BeautifulSoup(tmp, 'lxml')
-        raw_data_list = tmp_soup.find_all('a')
-        
-        for a in raw_data_list:
-            brand_url = get_brand_url(str(a))
+        while True:
+            try:
+                url = url.split('\n')[0]
+                print(url)
+                page = get_content(url)
+                soup = BeautifulSoup(page, 'lxml')
+                
+                tmp = str(soup.findAll('ul', {'class': 'Marca'})[0])
+                tmp_soup = BeautifulSoup(tmp, 'lxml')
+                raw_data_list = tmp_soup.find_all('a')
+                
+                for a in raw_data_list:
+                    brand_url = get_brand_url(str(a))
 
-            page = get_content(brand_url)
-            soup = BeautifulSoup(page, 'lxml')
+                    page = get_content(brand_url)
+                    soup = BeautifulSoup(page, 'lxml')
 
-            category, department = get_category_department(str(soup.findAll('title')[0]))
-            div_list = soup.findAll('div', {'data-isinstock': True})
+                    category, department = get_category_department(str(soup.findAll('title')[0]))
+                    div_list = soup.findAll('div', {'data-isinstock': True})
 
-            for raw_url in div_list:
-                product_url = get_product_url(str(raw_url))
+                    for raw_url in div_list:
+                        product_url = get_product_url(str(raw_url))
 
-                print(product_url)
-                while True:
-                    try:
+                        print(product_url)
                         page = get_content(product_url)
                         soup = BeautifulSoup(page, 'lxml')
 
@@ -209,13 +209,13 @@ def scrape():
 
                         download_image(image_link, gtin_code + '.jpg')
                         write_xml(row)
-                        break
-                    except ConnectionError:
-                        time.sleep(delay)
-                        continue
-                    except IndexError:
-                        print('Prduto indisponível - ' + product_url)
-                        break
+                break
+            except ConnectionError:
+                time.sleep(delay)
+                continue
+            except IndexError:
+                print('Prduto indisponível - ' + product_url)
+                break
 
 
 if __name__ == '__main__':
