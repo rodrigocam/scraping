@@ -56,7 +56,7 @@ DEPARTMENT_DICT = {'Alimentos Básicos': 2,
                    'Sucos e Sobremesas': 34,
                    'Petiscos e Empanados': 35,
                    'Pratos Prontos': 36,
-                   'Hambúrger': 37,
+                   'Hambúrguer': 37,
                    'Legumes Congelados': 38,
                    'Frutas Congeladas': 39,
                    'Pães': 40,
@@ -145,16 +145,17 @@ def get_attrib(raw_data):
 
 
 def get_category_department(raw_data):
-    raw_data = raw_data.replace('–', '-')
-    result = raw_data.partition(' - ')
-
-    category = result[0].split('<title>')[1]
-    department = result[2].partition(' - ')[0].split(' ')[0]
-    if department != 'Ovos' and department != 'Suínas':
-        department = result[2].partition(' - ')[0]
+    #print(raw_data)
+    result = raw_data.split('title=')
+    category = result[2].split('"')[1].split('">')[0]
+    department = result[3].split('"')[1].split('">')[0]
 
     print(category)
     print(department)
+
+    if '&amp;' in category:
+        tmp = category.partition('&amp;')
+        category = tmp[0] + 'e ' + tmp[2].split(' ')[1]
 
     if '&amp;' in department:
         tmp = department.partition('&amp;')
@@ -186,6 +187,8 @@ def scrape():
                 page = get_content(url)
                 soup = BeautifulSoup(page, 'lxml')
                 
+                category, department = get_category_department(str(soup.findAll('div', {'class':'bread-crumb'})[0]))
+
                 tmp = str(soup.findAll('ul', {'class': 'Marca'})[0])
                 tmp_soup = BeautifulSoup(tmp, 'lxml')
                 raw_data_list = tmp_soup.find_all('a')
@@ -196,7 +199,6 @@ def scrape():
                     page = get_content(brand_url)
                     soup = BeautifulSoup(page, 'lxml')
 
-                    category, department = get_category_department(str(soup.findAll('title')[0]))
                     div_list = soup.findAll('div', {'data-isinstock': True})
 
                     for raw_url in div_list:
