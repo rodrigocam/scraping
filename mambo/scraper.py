@@ -1,6 +1,7 @@
+from bs4 import BeautifulSoup
+import urllib.parse
 import urllib.request
 import xml.etree.cElementTree as ET
-from bs4 import BeautifulSoup
 import requests
 import os
 import random
@@ -115,6 +116,13 @@ def get_content(url):
 
 def download_image(url, image_name):
     caminho = os.getcwd() + "/images/" + image_name
+
+    # format urls that aren't ascii
+    tmp = urllib.parse.urlsplit(url)
+    tmp = list(tmp)
+    tmp[2] = urllib.parse.quote(tmp[2])
+    url = urllib.parse.urlunsplit(tmp)
+
     if not os.path.isfile(caminho):
         image = urllib.request.urlretrieve(url, caminho)
 
