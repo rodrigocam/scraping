@@ -60,7 +60,7 @@ DEPARTMENT_DICT = {'Alimentos Básicos': 2,
                    'Legumes Congelados': 38,
                    'Frutas Congeladas': 39,
                    'Pães': 40,
-                   'Água, Enegéticos e Chás': 41,
+                   'Água, Energéticos e Chás': 41,
                    'Sucos, Refrescos e Refrigerantes': 42,
                    'Cervejas': 43,
                    'Destilados': 44,
@@ -150,8 +150,8 @@ def get_category_department(raw_data):
     category = result[2].split('"')[1].split('">')[0]
     department = result[3].split('"')[1].split('">')[0]
 
-    print(category)
-    print(department)
+    #print(category)
+    #print(department)
 
     if '&amp;' in category:
         tmp = category.partition('&amp;')
@@ -180,27 +180,25 @@ def scrape():
     delay = 120
 
     for url in urls:
-        while True:
-            try:
-                url = url.split('\n')[0]
-                print(url)
-                page = get_content(url)
+        try:
+            url = url.split('\n')[0]
+            page = get_content(url)
+            soup = BeautifulSoup(page, 'lxml')
+            
+            category, department = get_category_department(str(soup.findAll('div', {'class':'bread-crumb'})[0]))
+
+            tmp = str(soup.findAll('ul', {'class': 'Marca'})[0])
+            tmp_soup = BeautifulSoup(tmp, 'lxml')
+            raw_data_list = tmp_soup.find_all('a')
+
+            for link in raw_data_list:               
+                brand_url = get_brand_url(str(link))
+
+                page = get_content(brand_url)
                 soup = BeautifulSoup(page, 'lxml')
-                
-                category, department = get_category_department(str(soup.findAll('div', {'class':'bread-crumb'})[0]))
 
-                tmp = str(soup.findAll('ul', {'class': 'Marca'})[0])
-                tmp_soup = BeautifulSoup(tmp, 'lxml')
-                raw_data_list = tmp_soup.find_all('a')
-                
-                for a in raw_data_list:
-                    brand_url = get_brand_url(str(a))
-
-                    page = get_content(brand_url)
-                    soup = BeautifulSoup(page, 'lxml')
-
-                    div_list = soup.findAll('div', {'data-isinstock': True})
-
+                div_list = soup.findAll('div', {'data-isinstock': True})
+                try:
                     for raw_url in div_list:
                         product_url = get_product_url(str(raw_url))
 
@@ -216,15 +214,14 @@ def scrape():
 
                         download_image(image_link, gtin_code + '.jpg')
                         write_xml(row)
-                break
-            except ConnectionError:
-                print('\n---- CONNECTION ERROR ----\n')
-                time.sleep(delay)
-                continue
-            except IndexError:
-                print('Prduto indisponível - ' + product_url)
-                break
+                except IndexError:
+                    print('Prpduto indisponível - ' + product_url)
+                    continue
 
+        except ConnectionError:
+            print('\n---- CONNECTION ERROR ----\n')
+            time.sleep(delay)
+            continue
 
 if __name__ == '__main__':
     scrape()
