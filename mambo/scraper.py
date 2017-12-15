@@ -215,7 +215,7 @@ def scrape():
                         download_image(image_link, gtin_code + '.jpg')
                         write_xml(row)
                 except IndexError:
-                    print('Prpduto indisponível - ' + product_url)
+                    print('Produto indisponível - ' + product_url)
                     continue
 
         except ConnectionError:
