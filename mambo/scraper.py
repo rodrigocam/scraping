@@ -9,7 +9,7 @@ import time
 
 CATEGORY_DICT = {'Mercearia': 2,
                  'Hortifrúti': 3,
-                 'Carnes e Aves': 4,
+                 'Carnes, Aves e Peixes': 4,
                  'Frios e Laticínios': 5,
                  'Pescados': 6,
                  'Padaria': 7,
