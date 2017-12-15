@@ -150,7 +150,7 @@ def get_category_department(raw_data):
 
     category = result[0].split('<title>')[1]
     department = result[2].partition(' - ')[0].split(' ')[0]
-    if department != 'Ovos':
+    if department != 'Ovos' and department != 'Suínas':
         department = result[2].partition(' - ')[0]
 
     print(category)
