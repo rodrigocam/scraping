@@ -149,7 +149,10 @@ def get_category_department(raw_data):
     result = raw_data.partition(' - ')
 
     category = result[0].split('<title>')[1]
-    department = result[2].partition(' - ')[0]
+    department = result[2].partition(' - ')[0].split(' ')[0]
+
+    print(category)
+    print(department)
 
     if '&amp;' in department:
         tmp = department.partition('&amp;')
