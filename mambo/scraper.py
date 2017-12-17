@@ -99,7 +99,9 @@ DEPARTMENT_DICT = {'Alimentos Básicos': 2,
                    'Vitaminas': 76,
                    'Emagrecedores': 77,
                    'Pós-treinos': 78,
-                   'Nutricosméticos': 79}
+                   'Nutricosméticos': 79,
+                   'Sementes e Nozes': 80,
+                   'Orientais': 81}
 
 XML_PATH = 'current_day.xml'
 
