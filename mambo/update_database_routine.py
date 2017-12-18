@@ -6,7 +6,7 @@ import os
 import scraper
 
 
-scraper.scrape()
+#scraper.scrape()
 
 tree = ET.parse('current_day.xml')
 root = tree.getroot()
