@@ -6,7 +6,7 @@ import os
 import scraper
 
 
-#scraper.scrape()
+scraper.scrape()
 
 tree = ET.parse('current_day.xml')
 root = tree.getroot()
@@ -32,7 +32,7 @@ for product in root.findall('produto'):
     with connection.cursor() as cursor:
         sql = "SET FOREIGN_KEY_CHECKS=0"
         cursor.execute(sql)
-        
+
         sql = "INSERT INTO `produto` (`id_grupo`,`id_familia`,`id_unidade_medida_venda`,`gtin`,`nome`,`ativo`,`disponivel`, `preco`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
         cursor.execute(sql, (department, category, 'UN', barcode, name, 1, 1, price))
         print('\n ---- PRODUCT INSERTED ----\n')
