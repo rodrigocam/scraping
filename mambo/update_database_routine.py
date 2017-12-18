@@ -36,8 +36,7 @@ for product in root.findall('produto'):
         sql = "INSERT INTO `produto` (`id_grupo`,`id_familia`,`id_unidade_medida_venda`,`gtin`,`nome`,`ativo`,`disponivel`, `preco`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
         cursor.execute(sql, (department, category, 'UN', barcode, name, 1, 1, price))
         print('\n ---- PRODUCT INSERTED ----\n')
-
-connection.commit()
+        connection.commit()
 
 print('\n ---- FINISHED ROUTINE ----')
 if os.path.isfile('last_day.xml'):
