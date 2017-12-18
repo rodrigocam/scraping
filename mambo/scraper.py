@@ -197,9 +197,15 @@ def scrape():
             
             category, department = get_category_department(str(soup.findAll('div', {'class':'bread-crumb'})[0]))
 
-            tmp = str(soup.findAll('ul', {'class': 'Marca'})[0])
+            
+            try:
+                tmp = str(soup.findAll('ul', {'class': 'Marca'})[0])
+            except IndexError:
+                tmp = str(soup.findAll('ul', {'class': 'banheiro even'})[0])
+                
             tmp_soup = BeautifulSoup(tmp, 'lxml')
             raw_data_list = tmp_soup.find_all('a')
+
 
             for link in raw_data_list:               
                 brand_url = get_brand_url(str(link))
