@@ -101,7 +101,9 @@ DEPARTMENT_DICT = {'Alimentos Básicos': 2,
                    'Pós-treinos': 78,
                    'Nutricosméticos': 79,
                    'Sementes e Nozes': 80,
-                   'Orientais': 81}
+                   'Orientais': 81,
+                   'Pré-Hormonais': 82,
+                   'Enzimas': 83}
 
 XML_PATH = 'current_day.xml'
 
@@ -202,7 +204,7 @@ def scrape():
                 tmp = str(soup.findAll('ul', {'class': 'Marca'})[0])
             except IndexError:
                 tmp = str(soup.findAll('ul', {'class': 'banheiro even'})[0])
-                
+
             tmp_soup = BeautifulSoup(tmp, 'lxml')
             raw_data_list = tmp_soup.find_all('a')
 
