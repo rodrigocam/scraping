@@ -28,15 +28,15 @@ for product in root.findall('produto'):
     barcode = product.find('gtin').text
     category = product.find('categoria').text
     department = product.find('departamento').text
-	
-    with connection.cursor() as cursor:
-        sql = "SET FOREIGN_KEY_CHECKS=0"
-        cursor.execute(sql)
+    if name:
+        with connection.cursor() as cursor:
+            sql = "SET FOREIGN_KEY_CHECKS=0"
+            cursor.execute(sql)
 
-        sql = "INSERT INTO `produto` (`id_grupo`,`id_familia`,`id_unidade_medida_venda`,`gtin`,`nome`,`ativo`,`disponivel`, `preco`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-        cursor.execute(sql, (department, category, 'UN', barcode, name, 1, 1, price))
-        print('\n ---- PRODUCT INSERTED ----\n')
-        connection.commit()
+            sql = "INSERT INTO `produto` (`id_grupo`,`id_familia`,`id_unidade_medida_venda`,`gtin`,`nome`,`ativo`,`disponivel`, `preco`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+            cursor.execute(sql, (department, category, 'UN', barcode, name, 1, 1, price))
+            print('\n ---- PRODUCT INSERTED ----\n')
+            connection.commit()
 
 print('\n ---- FINISHED ROUTINE ----')
 if os.path.isfile('last_day.xml'):
