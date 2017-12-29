@@ -32,12 +32,11 @@ for product in root.findall('produto'):
             sql = "SELECT `preco` FROM `produto` WHERE `gtin` = %s"
             cursor.execute(sql, barcode)
             result = cursor.fetchall()
-            print(result)
+
             if result:
                 result = '%.2f' % float(result[0]['preco'])
-                print('aq')
+                print('DATABASE PRICE %s --- XML PRICE %s' % (result, price))
                 if result != price:
-                    print('aq2')
                     sql = "UPDATE `produto` SET `preco` = %s WHERE `gtin` = %s"
                     cursor.execute(sql, (price, barcode))
                     print('\n ---- PRODUCT UPDATED ----\n')
