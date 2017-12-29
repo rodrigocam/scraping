@@ -31,14 +31,16 @@ for product in root.findall('produto'):
 
             sql = "SELECT `preco` FROM `produto` WHERE `gtin` = %s"
             cursor.execute(sql, barcode)
-            result = cursor.fetchall()[0]['preco']
+            result = cursor.fetchall()
 
-            if result is not None and result != price:
-                sql = "UPDATE `produto` SET `preco` = %s WHERE `gtin` = %s"
-                cursor.execute(sql, (price, barcode))
-                print('\n ---- PRODUCT UPDATED ----\n')
-                print('\n OLD PRICE : %s ---- NEW PRICE : %s\n' % (result, price))
-                connection.commit()
+            if result:
+                result = result[0]['preco']
+                if str(result) != str(price):
+                    sql = "UPDATE `produto` SET `preco` = %s WHERE `gtin` = %s"
+                    cursor.execute(sql, (price, barcode))
+                    print('\n ---- PRODUCT UPDATED ----\n')
+                    print('\n OLD PRICE : %s ---- NEW PRICE : %s\n' % (result, price))
+                    connection.commit()
             else:
                 sql = "INSERT INTO `produto` (`id_grupo`,`id_familia`,`id_unidade_medida_venda`,`gtin`,`nome`,`ativo`,`disponivel`, `preco`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
                 cursor.execute(sql, (department, category, 'UN', barcode, name, 1, 1, price))
