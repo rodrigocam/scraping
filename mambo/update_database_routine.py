@@ -34,7 +34,7 @@ for product in root.findall('produto'):
             result = cursor.fetchall()
 
             if result:
-                result = '%.2f' float(result[0]['preco'])
+                result = '%.2f' % float(result[0]['preco'])
                 if str(result) != str(price):
                     sql = "UPDATE `produto` SET `preco` = %s WHERE `gtin` = %s"
                     cursor.execute(sql, (price, barcode))
