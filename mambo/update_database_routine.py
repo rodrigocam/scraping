@@ -37,6 +37,7 @@ for product in root.findall('produto'):
                 sql = "UPDATE `produto` SET `preco` = %s WHERE `gtin` = %s"
                 cursor.execute(sql, (price, barcode))
                 print('\n ---- PRODUCT UPDATED ----\n')
+                print('\n OLD PRICE : %s ---- NEW PRICE : %s\n' % (result, price))
                 connection.commit()
             else:
                 sql = "INSERT INTO `produto` (`id_grupo`,`id_familia`,`id_unidade_medida_venda`,`gtin`,`nome`,`ativo`,`disponivel`, `preco`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
