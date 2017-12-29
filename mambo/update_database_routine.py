@@ -6,7 +6,7 @@ import os
 import scraper
 
 
-scraper.scrape()
+#scraper.scrape()
 
 tree = ET.parse('current_day.xml')
 root = tree.getroot()
@@ -17,10 +17,6 @@ connection = pymysql.connect(host='177.234.146.66',
 			                 db='mesa_supermercado',
 			                 charset='utf8mb4',
 			                 cursorclass=pymysql.cursors.DictCursor)
-
-with connection.cursor() as cursor:
-        sql = "DELETE FROM produto"
-        cursor.execute(sql)
 
 for product in root.findall('produto'):
     name = product.find('nome').text
@@ -33,12 +29,21 @@ for product in root.findall('produto'):
             sql = "SET FOREIGN_KEY_CHECKS=0"
             cursor.execute(sql)
 
-            sql = "INSERT INTO `produto` (`id_grupo`,`id_familia`,`id_unidade_medida_venda`,`gtin`,`nome`,`ativo`,`disponivel`, `preco`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-            cursor.execute(sql, (department, category, 'UN', barcode, name, 1, 1, price))
-            print('\n ---- PRODUCT INSERTED ----\n')
-            connection.commit()
+            sql = "SELECT `preco` FROM `produto` WHERE `gtin` = %s"
+            result = cursor.fetchall(sql, barcode)
+
+            if result is not None and result != price:
+                sql = "UPDATE `produto` SET `preco` = %s WHERE `gtin` = %s"
+                cursor.execute(sql, (price, barcode))
+                print('\n ---- PRODUCT UPDATED ----\n')
+                connection.commit()
+            else:
+                sql = "INSERT INTO `produto` (`id_grupo`,`id_familia`,`id_unidade_medida_venda`,`gtin`,`nome`,`ativo`,`disponivel`, `preco`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+                cursor.execute(sql, (department, category, 'UN', barcode, name, 1, 1, price))
+                print('\n ---- PRODUCT INSERTED ----\n')
+                connection.commit()
 
 print('\n ---- FINISHED ROUTINE ----')
-if os.path.isfile('last_day.xml'):
-    os.remove('last_day.xml')
-os.rename('current_day.xml', 'last_day.xml')
+# if os.path.isfile('last_day.xml'):
+#     os.remove('last_day.xml')
+# os.rename('current_day.xml', 'last_day.xml')
