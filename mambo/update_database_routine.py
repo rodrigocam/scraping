@@ -6,7 +6,7 @@ import os
 import scraper
 
 
-#scraper.scrape()
+scraper.scrape()
 
 tree = ET.parse('current_day.xml')
 root = tree.getroot()
@@ -49,6 +49,6 @@ for product in root.findall('produto'):
                 connection.commit()
 
 print('\n ---- FINISHED ROUTINE ----')
-# if os.path.isfile('last_day.xml'):
-#     os.remove('last_day.xml')
-# os.rename('current_day.xml', 'last_day.xml')
+if os.path.isfile('last_day.xml'):
+    os.remove('last_day.xml')
+os.rename('current_day.xml', 'last_day.xml')
